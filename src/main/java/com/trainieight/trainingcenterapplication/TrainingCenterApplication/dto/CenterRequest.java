@@ -1,12 +1,10 @@
 package com.trainieight.trainingcenterapplication.TrainingCenterApplication.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.trainieight.trainingcenterapplication.TrainingCenterApplication.domain.model.valueobject.Address;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
-import java.util.Date;
 import java.util.List;
 
 @Data
@@ -44,8 +42,6 @@ public class CenterRequest {
     @NotNull(message = "Contact phone is required")
     @Pattern(regexp = "^[0-9]{10}$", message = "Phone number must be exactly 10 digits")
     private String phoneNumber;
-
-
 
 }
 
