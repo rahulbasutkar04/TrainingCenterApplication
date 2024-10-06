@@ -82,6 +82,60 @@ class CenterServiceImplTest {
         assertEquals(centerResponse.getCenterName(), centerRequest.getCenterName());
         assertNotNull(centerResponse);
 
+    }
+
+    @Test
+    void shouldBeAbleToGetListOfCenter()
+    {
+        // arrange
+
+        when(centerRepository.findAll()).thenReturn(List.of());
+        // act
+        List<CenterResponse> centerResponses=centerServiceImpl.getAllCenter();
+
+        // assert
+        assertEquals(0,centerResponses.size());
+    }
+
+    @Test
+    void shouldBeAbleToGetCenterByName()
+    {
+        // arrange
+        String centerName = "RB Tower4";
+        String centerCode = "123456";
+        Address address = new Address("Floor 4 tower b", "Pune", "Maharashtra", "413006");
+        List<String> courseOffered = List.of("Python", "java");
+        String phoneNumber = "9284522484";
+        String email = "rahulbasutkar33@gmail.com";
+        int capacity = 90;
+
+        CenterRequest centerRequest = CenterRequest.builder()
+                .centerCode(centerCode)
+                .coursesOffered(courseOffered)
+                .centerName(centerName)
+                .address(address)
+                .email(email)
+                .phoneNumber(phoneNumber)
+                .capacity(capacity)
+                .build();
+
+        Center center = Center.builder()
+                .id("123456789")
+                .date(new Date())
+                .centerName(centerRequest.getCenterName())
+                .phoneNumber(centerRequest.getPhoneNumber())
+                .centerCode(centerRequest.getCenterCode())
+                .email(centerRequest.getEmail())
+                .capacity(centerRequest.getCapacity())
+                .coursesOffered(centerRequest.getCoursesOffered())
+                .address(centerRequest.getAddress())
+                .build();
+
+        when(centerRepository.findByCenterName(centerName)).thenReturn(center);
+
+        CenterResponse centerResponse=centerServiceImpl.getCenterByName(centerName);
+
+        assertEquals(centerResponse.getCenterName(),centerName);
 
     }
 
