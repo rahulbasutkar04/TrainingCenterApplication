@@ -1,7 +1,8 @@
 package com.trainieight.trainingcenterapplication.TrainingCenterApplication.service.impl;
 
 import com.trainieight.trainingcenterapplication.TrainingCenterApplication.domain.model.Center;
-import com.trainieight.trainingcenterapplication.TrainingCenterApplication.dto.CenterDTO;
+import com.trainieight.trainingcenterapplication.TrainingCenterApplication.dto.CenterRequest;
+import com.trainieight.trainingcenterapplication.TrainingCenterApplication.dto.CenterResponse;
 import com.trainieight.trainingcenterapplication.TrainingCenterApplication.exception.CenterAlreadyExistsException;
 import com.trainieight.trainingcenterapplication.TrainingCenterApplication.repository.CenterRepository;
 import com.trainieight.trainingcenterapplication.TrainingCenterApplication.service.CenterService;
@@ -19,53 +20,58 @@ public class CenterServiceImpl implements CenterService {
     private CenterRepository centerRepository;
 
     @Override
-    public CenterDTO createCenter(CenterDTO centerDTO) throws CenterAlreadyExistsException {
+    public CenterResponse createCenter(CenterRequest centerRequest) throws CenterAlreadyExistsException {
 
-        if (centerRepository.existsByCenterName(centerDTO.getCenterName()) ||
-                centerRepository.existsByCenterCode(centerDTO.getCenterCode())) {
+        if (centerRepository.existsByCenterName(centerRequest.getCenterName()) ||
+                centerRepository.existsByCenterCode(centerRequest.getCenterCode())) {
             throw new CenterAlreadyExistsException("A center with the same name and  code already exists.");
         }
 
-        Center center1 = Center.builder()
-                .centerName(centerDTO.getCenterName())
-                .centerCode(centerDTO.getCenterCode())
-                .email(centerDTO.getEmail())
-                .capacity(centerDTO.getCapacity())
-                .coursesOffered(centerDTO.getCoursesOffered())
-                .phoneNumber(centerDTO.getPhoneNumber())
-                .address(centerDTO.getAddress())
+        Center center = Center.builder()
+                .centerName(centerRequest.getCenterName())
+                .centerCode(centerRequest.getCenterCode())
+                .email(centerRequest.getEmail())
+                .capacity(centerRequest.getCapacity())
+                .coursesOffered(centerRequest.getCoursesOffered())
+                .phoneNumber(centerRequest.getPhoneNumber())
+                .address(centerRequest.getAddress())
                 .date(new Date())
                 .build();
 
-        Center savedCenter = centerRepository.save(center1);
-        return mapToCenterDTO(savedCenter);
+        Center savedCenter = centerRepository.save(center);
+        return mapToCenterResponse(savedCenter);
     }
 
     @Override
-    public List<CenterDTO> getAllCenter() {
-        List<CenterDTO> centerDTOList = new ArrayList<>();
+    public List<CenterResponse> getAllCenter() {
+        List<CenterResponse> centerRequestList = new ArrayList<>();
         List<Center> centerList = centerRepository.findAll();
         for (Center c : centerList) {
-            centerDTOList.add(mapToCenterDTO(c));
+            centerRequestList.add(mapToCenterResponse(c));
         }
-        return centerDTOList;
+        return centerRequestList;
     }
 
     @Override
-    public CenterDTO getCenterByName(String centerName) {
-        return mapToCenterDTO(centerRepository.findByCenterName(centerName));
+    public CenterResponse getCenterByName(String centerName) {
+        return mapToCenterResponse(centerRepository.findByCenterName(centerName));
     }
 
-    private CenterDTO mapToCenterDTO(Center center1) {
-        return CenterDTO.builder()
-                .centerName(center1.getCenterName())
-                .centerCode(center1.getCenterCode())
-                .email(center1.getEmail())
-                .capacity(center1.getCapacity())
-                .coursesOffered(center1.getCoursesOffered())
-                .phoneNumber(center1.getPhoneNumber())
-                .address(center1.getAddress())
-                .date(center1.getDate())
+    private CenterResponse mapToCenterResponse(Center center) {
+
+        System.out.println(center);
+        if (center == null) {
+            return null;
+        }
+        return CenterResponse.builder()
+                .centerName(center.getCenterName())
+                .centerCode(center.getCenterCode())
+                .email(center.getEmail())
+                .capacity(center.getCapacity())
+                .coursesOffered(center.getCoursesOffered())
+                .phoneNumber(center.getPhoneNumber())
+                .address(center.getAddress())
+
                 .build();
     }
 

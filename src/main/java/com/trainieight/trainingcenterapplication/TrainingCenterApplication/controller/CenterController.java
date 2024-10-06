@@ -1,6 +1,7 @@
 package com.trainieight.trainingcenterapplication.TrainingCenterApplication.controller;
 
-import com.trainieight.trainingcenterapplication.TrainingCenterApplication.dto.CenterDTO;
+import com.trainieight.trainingcenterapplication.TrainingCenterApplication.dto.CenterRequest;
+import com.trainieight.trainingcenterapplication.TrainingCenterApplication.dto.CenterResponse;
 import com.trainieight.trainingcenterapplication.TrainingCenterApplication.exception.CenterAlreadyExistsException;
 import com.trainieight.trainingcenterapplication.TrainingCenterApplication.service.CenterService;
 import jakarta.validation.Valid;
@@ -19,19 +20,19 @@ public class CenterController {
     private CenterService centerService;
 
     @PostMapping("/create")
-    public ResponseEntity<CenterDTO> createCenter(@Valid @RequestBody CenterDTO centerDTO) throws CenterAlreadyExistsException {
-        return new ResponseEntity<>(centerService.createCenter(centerDTO), HttpStatus.CREATED);
+    public ResponseEntity<CenterResponse> createCenter(@Valid @RequestBody CenterRequest centerRequest) throws CenterAlreadyExistsException {
+        return new ResponseEntity<>(centerService.createCenter(centerRequest), HttpStatus.CREATED);
     }
 
 
     @GetMapping("/get")
-    public ResponseEntity<List<CenterDTO>> getAllCenters() {
+    public ResponseEntity<List<CenterResponse>> getAllCenters() {
         return new ResponseEntity<>(centerService.getAllCenter(), HttpStatus.OK);
     }
 
 
     @GetMapping("/get/{centerName}")
-    public ResponseEntity<CenterDTO> getCenterByName(@PathVariable String centerName) {
+    public ResponseEntity<CenterResponse> getCenterByName(@PathVariable String centerName) {
         return new ResponseEntity<>(centerService.getCenterByName(centerName), HttpStatus.OK);
     }
 }
