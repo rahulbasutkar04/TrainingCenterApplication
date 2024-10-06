@@ -44,7 +44,6 @@ class CenterTest {
 
 
         // act & assert
-
         assertNotNull(center);
     }
 }
